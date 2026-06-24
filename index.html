@@ -180,9 +180,13 @@
   }
   @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto;}}
   @media print{
+    @page{margin:12mm;}
+    *{-webkit-print-color-adjust:exact !important;print-color-adjust:exact !important;}
     body{background:#fff;}
-    .actions{display:none;}
-    .sphere,.summary,.q{box-shadow:none;break-inside:avoid;}
+    .actions,.hint,#showBtn{display:none !important;}
+    .sphere,.q,.sum-item,.sphere-head{break-inside:avoid;page-break-inside:avoid;}
+    .summary{box-shadow:none;}
+    .sphere{box-shadow:none;}
   }
 </style>
 </head>
@@ -220,11 +224,12 @@
   </section>
 
   <div class="actions">
-    <button class="act" onclick="downloadPDF()">Скачать PDF</button>
-    <button class="act ghost" onclick="window.print()">Печать</button>
+    <button class="act" onclick="copyResults()">Скопировать результаты</button>
+    <button class="act ghost" onclick="downloadTxt()">Скачать файл (.txt)</button>
+    <button class="act ghost" onclick="window.print()">Печать / PDF</button>
     <button class="act ghost" onclick="resetAll()">Очистить</button>
   </div>
-  <p class="hint">Если PDF не скачивается, откройте страницу в Safari или Chrome (а не внутри Telegram или Instagram) — встроенные браузеры приложений блокируют сохранение файлов.</p>
+  <p class="hint">Самый простой способ сохранить — «Скопировать результаты»: текст ляжет в буфер, его можно вставить в заметки или отправить себе в сообщении. «Скачать файл (.txt)» сохранит те же результаты отдельным файлом. «Печать / PDF» работает в браузере Safari или Chrome (не внутри Telegram).</p>
 
   <div class="page-sign">
     <div class="sig-name">С уважением, Анастасия Васильева</div>
@@ -240,7 +245,6 @@
   <p class="basis">Бланк составлен на основе концепций семейной и парной терапии: теории привязанности (Дж. Боулби; С. Джонсон, ЭФТ), исследований пар Дж. Готтмана, имаго-подхода (Х. Хендрикс), модели межличностных потребностей В. Шутца (FIRO) и системного подхода к отношениям. Предназначен для самонаблюдения и личной ориентации; не является стандартизированной психодиагностической методикой.</p>
 </div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.3/html2pdf.bundle.min.js"></script>
 <script>
 const spheres = [
   ["Эмоциональная близость","Я делюсь тем, что внутри, и чувствую, что меня понимают и принимают."],
@@ -270,15 +274,22 @@ spheres.forEach((s, i) => {
     <div class="row">
       <div class="row-label"><span class="name">Насколько это важно для меня</span><span class="val val-imp" id="vi${i}">5</span></div>
       <input type="range" class="imp" min="0" max="10" value="5" aria-label="${s[0]} — важность"
-             oninput="document.getElementById('vi${i}').textContent=this.value">
+             oninput="document.getElementById('vi${i}').textContent=this.value;fillRange(this)">
     </div>
     <div class="row">
       <div class="row-label"><span class="name">Насколько я довольна этим сейчас</span><span class="val val-now" id="vn${i}">5</span></div>
       <input type="range" class="now" min="0" max="10" value="5" aria-label="${s[0]} — сейчас"
-             oninput="document.getElementById('vn${i}').textContent=this.value">
+             oninput="document.getElementById('vn${i}').textContent=this.value;fillRange(this)">
     </div>`;
   root.appendChild(el);
 });
+document.querySelectorAll('input[type=range]').forEach(fillRange);
+
+function fillRange(input){
+  const v = (+input.value)*10;
+  const c = input.classList.contains('imp') ? 'var(--green)' : 'var(--powder)';
+  input.style.background = 'linear-gradient(to right, '+c+' 0%, '+c+' '+v+'%, var(--track) '+v+'%, var(--track) 100%)';
+}
 
 const tipsDev = {
   "Эмоциональная близость":"Пробуйте делиться не фактами дня, а чувствами — даже коротким «мне сейчас тревожно» или «мне хорошо рядом».",
@@ -377,103 +388,64 @@ function buildSummary(noScroll){
   if(!noScroll){ document.getElementById('summary').scrollIntoView({behavior:'smooth', block:'start'}); }
 }
 
-function buildReportHTML(){
-  const data = spheres.map((s,i) => ({
-    name: s[0],
-    imp: +document.querySelectorAll('.imp')[i].value,
-    now: +document.querySelectorAll('.now')[i].value
-  }));
-  const priority = data.filter(d => d.imp >= 6 && (d.imp - d.now) >= 3)
-    .sort((a,b) => ((b.imp-b.now)*b.imp) - ((a.imp-a.now)*a.imp));
-  const strengths = data.filter(d => d.now >= 7).sort((a,b) => b.now - a.now);
-
-  const C = {ink:'#3E4A52',soft:'#5C6A72',mute:'#8C8273',blue:'#41525C',blueAcc:'#4F6E7D',
-             terra:'#9F6C52',line:'#E1D7C8',panel:'#FBF8F2',sand:'#F1E7D6'};
+function resultsText(){
+  const data = spheres.map((s,i)=>({name:s[0], imp:+document.querySelectorAll('.imp')[i].value, now:+document.querySelectorAll('.now')[i].value}));
+  const priority = data.filter(d=>d.imp>=6 && (d.imp-d.now)>=3).sort((a,b)=>((b.imp-b.now)*b.imp)-((a.imp-a.now)*a.imp));
+  const strengths = data.filter(d=>d.now>=7).sort((a,b)=>b.now-a.now);
   const today = new Date().toLocaleDateString('ru-RU',{day:'numeric',month:'long',year:'numeric'});
-
-  const scoreRows = data.map(d => `
-    <tr>
-      <td style="padding:6px 0;border-bottom:1px solid ${C.line};font-size:13px;color:${C.ink};">${d.name}</td>
-      <td style="padding:6px 0;border-bottom:1px solid ${C.line};font-size:13px;color:${C.blueAcc};text-align:right;width:70px;">важн. ${d.imp}</td>
-      <td style="padding:6px 0;border-bottom:1px solid ${C.line};font-size:13px;color:${C.terra};text-align:right;width:90px;">сейчас ${d.now}</td>
-    </tr>`).join('');
-
-  const devBlock = priority.length ? priority.map(d => `
-    <div style="padding:11px 0;border-bottom:1px solid ${C.line};">
-      <div style="font-size:14px;font-weight:600;color:${C.blue};">${d.name}
-        <span style="color:${C.terra};font-weight:600;">&nbsp;— разрыв ${d.imp-d.now}</span></div>
-      <div style="font-size:12.5px;color:${C.soft};line-height:1.5;margin-top:3px;">${tipsDev[d.name]||''}</div>
-    </div>`).join('')
-    : `<div style="font-size:13px;color:${C.mute};font-style:italic;">Сейчас нет сфер с большим разрывом — хороший знак.</div>`;
-
-  const resBlock = strengths.length ? strengths.map(d => `
-    <div style="padding:11px 0;border-bottom:1px solid ${C.line};">
-      <div style="font-size:14px;font-weight:600;color:${C.blue};">${d.name}
-        <span style="color:${C.blueAcc};font-weight:600;">&nbsp;— ${d.now}/10</span></div>
-      <div style="font-size:12.5px;color:${C.soft};line-height:1.5;margin-top:3px;">${tipsRes[d.name]||''}</div>
-    </div>`).join('')
-    : `<div style="font-size:13px;color:${C.mute};font-style:italic;">Пока ни одна сфера не набрала высокой удовлетворённости.</div>`;
-
-  return `
-  <div style="width:720px;padding:36px 40px;background:${C.panel};font-family:'Manrope',sans-serif;color:${C.ink};box-sizing:border-box;">
-    <div style="font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:${C.blueAcc};font-weight:600;">Бланк для самонаблюдения</div>
-    <div style="font-family:'Lora',serif;font-size:32px;font-weight:600;color:${C.blue};margin:8px 0 4px;">Карта моих отношений</div>
-    <div style="font-size:12.5px;color:${C.mute};margin-bottom:22px;">${today}</div>
-
-    <div style="font-family:'Lora',serif;font-size:18px;color:${C.blue};margin:0 0 6px;">Зоны развития</div>
-    <div style="font-size:12px;color:${C.mute};margin-bottom:8px;">Важно, но пока не хватает — с этого стоит начать.</div>
-    ${devBlock}
-
-    <div style="font-family:'Lora',serif;font-size:18px;color:${C.blue};margin:26px 0 6px;">Ресурсы и опоры</div>
-    <div style="font-size:12px;color:${C.mute};margin-bottom:8px;">То, чем вы уже довольны — на это можно опираться.</div>
-    ${resBlock}
-
-    <div style="font-family:'Lora',serif;font-size:18px;color:${C.blue};margin:26px 0 6px;">Все сферы — мои оценки</div>
-    <table style="width:100%;border-collapse:collapse;">${scoreRows}</table>
-
-    <div style="margin-top:24px;padding:16px 18px;background:${C.sand};border-radius:8px;font-size:13.5px;color:${C.ink};line-height:1.55;">
-      Если вы хотите обсудить результаты — напишите мне, и я предложу дальнейшие шаги для развития отношений. Это бесплатно.<br>
-      <span style="color:${C.blue};font-weight:600;">t.me/Anastasia_Sibgatulina</span>
-    </div>
-
-    <div style="margin-top:22px;text-align:right;">
-      <div style="font-family:'Lora',serif;font-size:18px;font-weight:600;color:${C.blue};">С уважением, Анастасия Васильева</div>
-      <div style="font-size:12.5px;color:${C.mute};">клинический психолог</div>
-    </div>
-
-    <div style="margin-top:20px;padding-top:14px;border-top:1px solid ${C.line};font-size:10px;color:${C.mute};line-height:1.5;">
-      Бланк составлен на основе концепций семейной и парной терапии: теории привязанности (Дж. Боулби; С. Джонсон, ЭФТ), исследований пар Дж. Готтмана, имаго-подхода (Х. Хендрикс), модели межличностных потребностей В. Шутца (FIRO) и системного подхода. Предназначен для самонаблюдения; не является стандартизированной психодиагностической методикой.
-    </div>
-  </div>`;
+  let t = 'КАРТА МОИХ ОТНОШЕНИЙ\n'+today+'\n\n';
+  t += 'ЗОНЫ РАЗВИТИЯ (важно, но пока не хватает):\n';
+  if(priority.length){ priority.forEach(d=>{ t += '• '+d.name+' — разрыв '+(d.imp-d.now)+'\n   '+(tipsDev[d.name]||'')+'\n'; }); }
+  else { t += '• Сейчас нет сфер с большим разрывом — хороший знак.\n'; }
+  t += '\nРЕСУРСЫ И ОПОРЫ (чем вы уже довольны):\n';
+  if(strengths.length){ strengths.forEach(d=>{ t += '• '+d.name+' — '+d.now+'/10\n   '+(tipsRes[d.name]||'')+'\n'; }); }
+  else { t += '• Пока ни одна сфера не набрала высокой удовлетворённости.\n'; }
+  t += '\nВСЕ СФЕРЫ (важность / сейчас):\n';
+  data.forEach(d=>{ t += '• '+d.name+': важность '+d.imp+', сейчас '+d.now+'\n'; });
+  t += '\nЕсли хотите обсудить результаты — напишите мне, и я предложу дальнейшие шаги для развития отношений. Это бесплатно.\nt.me/Anastasia_Sibgatulina\n\nС уважением, Анастасия Васильева, клинический психолог';
+  return t;
 }
 
-function downloadPDF(){
-  if(typeof html2pdf === 'undefined'){ window.print(); return; }
-  const holder = document.createElement('div');
-  holder.style.position = 'fixed';
-  holder.style.left = '-10000px';
-  holder.style.top = '0';
-  holder.innerHTML = buildReportHTML();
-  document.body.appendChild(holder);
-  const report = holder.firstElementChild;
-  const opt = {
-    margin:[10,0,12,0],
-    filename:'Карта-отношений.pdf',
-    image:{type:'jpeg',quality:0.96},
-    html2canvas:{scale:2,useCORS:true,backgroundColor:'#FBF8F2'},
-    jsPDF:{unit:'mm',format:'a4',orientation:'portrait'},
-    pagebreak:{mode:['css','legacy']}
-  };
-  html2pdf().set(opt).from(report).save().then(function(){
-    document.body.removeChild(holder);
-  }).catch(function(){
-    if(holder.parentNode){ document.body.removeChild(holder); }
-    window.print();
-  });
+function toast(msg){
+  let el=document.getElementById('toast');
+  if(!el){
+    el=document.createElement('div'); el.id='toast'; document.body.appendChild(el);
+    el.style.cssText='position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:#41525C;color:#fff;padding:12px 22px;border-radius:99px;font-family:Manrope,sans-serif;font-size:14px;z-index:9999;box-shadow:0 6px 22px rgba(0,0,0,.22);transition:opacity .3s;max-width:90%;text-align:center;';
+  }
+  el.textContent=msg; el.style.opacity='1';
+  clearTimeout(el._t); el._t=setTimeout(function(){ el.style.opacity='0'; }, 2800);
+}
+
+function fallbackCopy(t){
+  const ta=document.createElement('textarea'); ta.value=t;
+  ta.style.cssText='position:fixed;left:-9999px;top:0;';
+  document.body.appendChild(ta); ta.focus(); ta.select();
+  let ok=false; try{ ok=document.execCommand('copy'); }catch(e){ ok=false; }
+  document.body.removeChild(ta);
+  if(ok){ toast('Результаты скопированы — вставьте в заметки или сообщение'); }
+  else { alert('Скопируйте текст вручную:\n\n'+t); }
+}
+
+function copyResults(){
+  const t=resultsText();
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(t).then(function(){ toast('Результаты скопированы — вставьте в заметки или сообщение'); }).catch(function(){ fallbackCopy(t); });
+  } else { fallbackCopy(t); }
+}
+
+function downloadTxt(){
+  try{
+    const blob=new Blob([resultsText()], {type:'text/plain;charset=utf-8'});
+    const url=URL.createObjectURL(blob);
+    const a=document.createElement('a'); a.href=url; a.download='Карта-отношений.txt';
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    setTimeout(function(){ URL.revokeObjectURL(url); }, 1500);
+    toast('Файл сохранён');
+  }catch(e){ copyResults(); }
 }
 
 function resetAll(){
-  document.querySelectorAll('input[type=range]').forEach((r)=>{ r.value=5; });
+  document.querySelectorAll('input[type=range]').forEach((r)=>{ r.value=5; fillRange(r); });
   spheres.forEach((s,i)=>{
     document.getElementById('vi'+i).textContent='5';
     document.getElementById('vn'+i).textContent='5';
