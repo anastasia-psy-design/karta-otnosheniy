@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Карта моих отношений · бланк для самонаблюдения</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;1,400&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#EEE7DD;
+    --paper:#FBF8F2;
+    --ink:#3E4A52;
+    --ink-soft:#5C6A72;
+    --ink-mute:#8C8273;
+    --green:#4F6E7D;
+    --green-soft:#A7B9C6;
+    --green-deep:#41525C;
+    --powder:#9F6C52;
+    --powder-soft:#E3D2BB;
+    --line:#E1D7C8;
+    --track:#E6DCCD;
+    --panel:#E8EEF1;
+    --shadow:0 14px 42px -30px rgba(62,74,82,.42);
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;background:var(--bg);color:var(--ink);
+    font-family:"Manrope",system-ui,sans-serif;
+    line-height:1.6;font-size:16px;-webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:760px;margin:0 auto;padding:54px 22px 80px;}
+
+  /* header */
+  header{margin-bottom:36px;}
+  .eyebrow{
+    font-size:12px;letter-spacing:.24em;text-transform:uppercase;
+    color:var(--green);font-weight:600;margin:0 0 16px;
+  }
+  h1{
+    font-family:"Lora",serif;font-weight:600;
+    font-size:clamp(33px,6.5vw,50px);line-height:1.08;
+    margin:0 0 20px;color:var(--green-deep);
+  }
+  .lede{font-size:17px;color:var(--ink-soft);max-width:62ch;margin:0;}
+  .lede + .lede{margin-top:13px;}
+
+  .note{
+    margin:28px 0 0;padding:18px 20px;background:var(--paper);
+    border:1px solid var(--line);border-left:3px solid var(--green-soft);
+    border-radius:6px;font-size:14.5px;color:var(--ink-soft);
+  }
+  .note b{color:var(--green-deep);font-weight:600;}
+
+  /* legend */
+  .legend{
+    display:flex;flex-wrap:wrap;gap:8px 26px;margin:32px 0 8px;
+    font-size:13.5px;color:var(--ink-mute);
+  }
+  .legend span{display:inline-flex;align-items:center;gap:9px;}
+  .swatch{width:14px;height:14px;border-radius:50%;display:inline-block;}
+  .sw-imp{background:var(--green);}
+  .sw-now{background:var(--powder);}
+
+  /* spheres */
+  .sphere{
+    background:var(--paper);border:1px solid var(--line);border-radius:12px;
+    padding:24px 24px 18px;margin:14px 0;box-shadow:var(--shadow);
+  }
+  .sphere-head{display:flex;align-items:baseline;gap:12px;margin-bottom:4px;}
+  .sphere-num{
+    font-family:"Lora",serif;font-size:23px;color:var(--green);
+    font-weight:600;line-height:1;min-width:30px;
+  }
+  .sphere-title{font-size:18px;font-weight:600;color:var(--green-deep);margin:0;}
+  .sphere-desc{font-size:14.5px;color:var(--ink-mute);margin:2px 0 16px 42px;}
+
+  .row{margin:0 0 6px 42px;}
+  .row-label{display:flex;justify-content:space-between;align-items:center;font-size:13px;margin-bottom:4px;}
+  .row-label .name{color:var(--ink-soft);font-weight:500;}
+  .row-label .val{font-family:"Lora",serif;font-size:20px;font-weight:600;min-width:24px;text-align:right;}
+  .val-imp{color:var(--green);}
+  .val-now{color:var(--powder);}
+
+  input[type=range]{
+    -webkit-appearance:none;appearance:none;width:100%;height:6px;
+    background:var(--track);border-radius:99px;outline:none;margin:6px 0 14px;cursor:pointer;
+  }
+  input[type=range]::-webkit-slider-thumb{
+    -webkit-appearance:none;appearance:none;width:22px;height:22px;border-radius:50%;
+    border:3px solid var(--paper);box-shadow:0 1px 5px rgba(76,90,64,.3);cursor:pointer;
+  }
+  input[type=range]::-moz-range-thumb{
+    width:18px;height:18px;border-radius:50%;border:3px solid var(--paper);
+    box-shadow:0 1px 5px rgba(76,90,64,.3);cursor:pointer;
+  }
+  .imp::-webkit-slider-thumb{background:var(--green);}
+  .imp::-moz-range-thumb{background:var(--green);}
+  .now::-webkit-slider-thumb{background:var(--powder);}
+  .now::-moz-range-thumb{background:var(--powder);}
+  input[type=range]:focus-visible{box-shadow:0 0 0 3px var(--green-soft);}
+
+  /* summary */
+  .summary{
+    margin-top:42px;background:var(--panel);color:var(--ink);
+    border:1px solid var(--green-soft);border-radius:14px;
+    padding:32px 28px;box-shadow:var(--shadow);
+  }
+  .summary h2{font-family:"Lora",serif;font-weight:600;font-size:28px;margin:0 0 8px;color:var(--green-deep);}
+  .summary p.sub{color:var(--ink-soft);font-size:14.5px;margin:0 0 24px;}
+  .sum-group{margin-bottom:24px;}
+  .sum-group:last-child{margin-bottom:0;}
+  .sum-group h3{font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--green);margin:0 0 12px;font-weight:600;}
+  .sum-item{padding:13px 0;border-bottom:1px solid rgba(76,90,64,.12);}
+  .sum-item:last-child{border-bottom:none;}
+  .sum-row{display:flex;align-items:center;gap:14px;}
+  .sum-name{flex:1;font-size:15px;font-weight:600;color:var(--green-deep);}
+  .sum-tip{margin:8px 0 0;font-size:13px;color:var(--ink-soft);line-height:1.5;}
+  .sum-bar{flex:0 0 110px;height:7px;background:rgba(76,90,64,.12);border-radius:99px;position:relative;overflow:hidden;}
+  .sum-bar i{position:absolute;left:0;top:0;bottom:0;border-radius:99px;}
+  .sum-gap{flex:0 0 50px;text-align:right;font-family:"Lora",serif;font-size:19px;font-weight:600;color:var(--green-deep);}
+  .empty{color:var(--ink-mute);font-size:14.5px;font-style:italic;}
+  .sum-cta{
+    margin-top:26px;padding:20px 22px;border-radius:10px;
+    background:var(--powder-soft);border:1px solid var(--powder);
+    color:var(--ink);font-size:15px;line-height:1.6;
+  }
+  .tg-btn{
+    display:inline-flex;align-items:center;gap:8px;margin-top:14px;
+    padding:11px 22px;border-radius:99px;background:var(--green-deep);
+    color:#F4F1E8;text-decoration:none;font-size:14.5px;font-weight:600;
+    transition:opacity .15s;
+  }
+  .tg-btn:hover{opacity:.88;}
+  .tg-btn svg{width:17px;height:17px;fill:currentColor;}
+
+  /* signature */
+  .signature{margin-top:30px;padding-top:22px;border-top:1px solid rgba(76,90,64,.14);text-align:right;}
+  .signature .sig-name{font-family:"Lora",serif;font-size:22px;font-weight:600;color:var(--green-deep);}
+  .signature .sig-role{font-size:13.5px;color:var(--ink-mute);margin-top:2px;}
+  .signature .sig-tg{display:inline-block;margin-top:8px;font-size:14px;color:var(--green);text-decoration:none;font-weight:600;}
+  .signature .sig-tg:hover{text-decoration:underline;}
+
+  .page-sign{margin-top:34px;padding-top:24px;border-top:1px solid var(--line);text-align:right;}
+  .page-sign .sig-name{font-family:"Lora",serif;font-size:22px;font-weight:600;color:var(--green-deep);}
+  .page-sign .sig-role{font-size:13.5px;color:var(--ink-mute);margin-top:2px;}
+  .page-sign .sig-tg{display:inline-flex;align-items:center;gap:7px;margin-top:10px;font-size:14px;color:var(--green-deep);text-decoration:none;font-weight:600;}
+  .page-sign .sig-tg:hover{text-decoration:underline;}
+  .page-sign .sig-tg svg{width:16px;height:16px;fill:currentColor;}
+
+  /* reflection */
+  .reflect{margin-top:36px;}
+  .reflect h2{font-family:"Lora",serif;font-weight:600;font-size:26px;color:var(--green-deep);margin:0 0 6px;}
+  .reflect p.sub{color:var(--ink-mute);font-size:14.5px;margin:0 0 18px;}
+  .q{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:16px 18px;margin:10px 0;}
+  .q label{display:block;font-size:14.5px;color:var(--ink-soft);margin-bottom:10px;font-weight:500;}
+  .q textarea{width:100%;border:none;border-bottom:1px solid var(--line);background:transparent;font-family:inherit;font-size:15px;color:var(--ink);resize:vertical;min-height:46px;padding:4px 2px;line-height:1.5;}
+  .q textarea:focus{outline:none;border-bottom-color:var(--green);}
+
+  .actions{margin-top:30px;display:flex;gap:12px;flex-wrap:wrap;}
+  .hint{margin-top:12px;font-size:12.5px;color:var(--ink-mute);line-height:1.5;max-width:60ch;}
+  body.pdf-capturing .actions,
+  body.pdf-capturing #showBtn,
+  body.pdf-capturing .hint{display:none !important;}
+  .sphere,.q,.sum-item{break-inside:avoid;page-break-inside:avoid;}
+  button.act{font-family:inherit;font-size:14.5px;font-weight:600;cursor:pointer;border-radius:99px;padding:13px 26px;border:1px solid var(--green-deep);background:var(--green-deep);color:#F4F1E8;transition:opacity .15s;}
+  button.act.ghost{background:transparent;color:var(--green-deep);}
+  button.act:hover{opacity:.86;}
+
+  footer{margin-top:36px;text-align:center;font-size:13px;color:var(--ink-mute);}
+  .basis{margin:16px 0 0;font-size:11px;line-height:1.55;color:var(--ink-mute);opacity:.85;text-align:center;max-width:64ch;margin-left:auto;margin-right:auto;}
+
+  @media (max-width:520px){
+    .sphere-desc,.row{margin-left:0;}
+    .sum-bar{flex-basis:80px;}
+    .signature,.page-sign{text-align:left;}
+  }
+  @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto;}}
+  @media print{
+    body{background:#fff;}
+    .actions{display:none;}
+    .sphere,.summary,.q{box-shadow:none;break-inside:avoid;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <p class="eyebrow">Бланк для самонаблюдения</p>
+    <h1>Карта моих отношений</h1>
+    <p class="lede">Это интерактивный помощник для отношений. Вы сможете проанализировать, какие сферы в отношениях для вас важны, насколько вы удовлетворены тем, что есть сейчас, и где зоны развития отношений.</p>
+    <p class="lede">По каждой сфере отметьте <b style="color:var(--green)">важность</b> и то, <b style="color:var(--powder)">насколько вы довольны</b>. Цифра расхождения покажет, на что стоит обратить внимание. Результаты можно проанализировать самостоятельно, обсудить с партнёром или на консультации с психологом.</p>
+    <div class="note">
+      <b>Как заполнять.</b> Ориентируйтесь на свои ощущения, а не на то, «как должно быть». Если сфера не отзывается — поставьте важность пониже, это тоже ответ. Заполняйте за один присест, не задерживаясь подолгу на каждом пункте: первая реакция обычно честнее.
+    </div>
+  </header>
+
+  <div class="legend">
+    <span><i class="swatch sw-imp"></i>Важность для меня</span>
+    <span><i class="swatch sw-now"></i>Как сейчас</span>
+    <span style="color:var(--ink-mute)">0 — совсем нет · 10 — в полной мере</span>
+  </div>
+
+  <div id="spheres"></div>
+
+  <button class="act" id="showBtn" style="margin-top:20px" onclick="buildSummary()">Показать мою карту</button>
+
+  <div id="summary"></div>
+
+  <section class="reflect">
+    <h2>Несколько вопросов для себя</h2>
+    <p class="sub">Не обязательно отвечать на все. Пишите коротко — то, что приходит первым.</p>
+    <div class="q"><label>Что из этого списка беспокоит меня сильнее всего?</label><textarea rows="2"></textarea></div>
+    <div class="q"><label>А что, наоборот, ощущается опорой — тем, что у нас хорошо?</label><textarea rows="2"></textarea></div>
+    <div class="q"><label>Если бы я могла изменить одно — что бы это было?</label><textarea rows="2"></textarea></div>
+    <div class="q"><label>О чём мне трудно сказать партнёру напрямую?</label><textarea rows="2"></textarea></div>
+  </section>
+
+  <div class="actions">
+    <button class="act" onclick="downloadPDF()">Скачать PDF</button>
+    <button class="act ghost" onclick="window.print()">Печать</button>
+    <button class="act ghost" onclick="resetAll()">Очистить</button>
+  </div>
+  <p class="hint">Если PDF не скачивается, откройте страницу в Safari или Chrome (а не внутри Telegram или Instagram) — встроенные браузеры приложений блокируют сохранение файлов.</p>
+
+  <div class="page-sign">
+    <div class="sig-name">С уважением, Анастасия Васильева</div>
+    <div class="sig-role">клинический психолог</div>
+    <a class="sig-tg" href="https://t.me/Anastasia_Sibgatulina" target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9.78 18.65l.28-4.23 7.68-6.92c.34-.31-.07-.46-.52-.19L7.74 13.3 3.64 12c-.88-.25-.89-.86.2-1.3l15.97-6.16c.73-.33 1.43.18 1.15 1.3l-2.72 12.81c-.19.91-.74 1.13-1.5.71L12.6 16.3l-1.99 1.93c-.23.23-.42.42-.83.42z"/></svg>
+      t.me/Anastasia_Sibgatulina
+    </a>
+  </div>
+
+  <footer>Заполненный бланк удобно сохранить или принести на консультацию — он помогает построить разговор.</footer>
+
+  <p class="basis">Бланк составлен на основе концепций семейной и парной терапии: теории привязанности (Дж. Боулби; С. Джонсон, ЭФТ), исследований пар Дж. Готтмана, имаго-подхода (Х. Хендрикс), модели межличностных потребностей В. Шутца (FIRO) и системного подхода к отношениям. Предназначен для самонаблюдения и личной ориентации; не является стандартизированной психодиагностической методикой.</p>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.3/html2pdf.bundle.min.js"></script>
+<script>
+const spheres = [
+  ["Эмоциональная близость","Я делюсь тем, что внутри, и чувствую, что меня понимают и принимают."],
+  ["Телесность и близость","Прикосновения, нежность, желание — мне их хватает, и это так, как хочется мне."],
+  ["Общение и конфликты","Мы умеем говорить о трудном и находим, как помириться после ссор."],
+  ["Доверие и безопасность","Я спокойна за нас — без постоянной тревоги, ревности или страха быть оставленной."],
+  ["Роли и справедливость","Решения и бытовая нагрузка распределены так, что мне это кажется честным."],
+  ["Моё пространство","У меня есть право на своё — время, мнение, отдельность, интересы вне пары."],
+  ["Время вдвоём","У нас есть «мы»: общие занятия и время, которое мы хотим проводить вместе."],
+  ["Финансы","По деньгам у нас ясность и согласие; я чувствую опору и предсказуемость."],
+  ["Семья и границы","С родителями, детьми и роднёй выстроены границы, которые меня устраивают."],
+  ["Ценности и будущее","Мы смотрим в одну сторону: важное и долгосрочные цели у нас совпадают."],
+  ["Признание и уважение","Меня ценят и замечают, ко мне относятся с уважением."],
+  ["Поддержка в трудном","Когда тяжело извне, мы становимся опорой друг для друга."]
+];
+
+const root = document.getElementById('spheres');
+spheres.forEach((s, i) => {
+  const el = document.createElement('div');
+  el.className = 'sphere';
+  el.innerHTML = `
+    <div class="sphere-head">
+      <span class="sphere-num">${String(i+1).padStart(2,'0')}</span>
+      <h3 class="sphere-title">${s[0]}</h3>
+    </div>
+    <p class="sphere-desc">${s[1]}</p>
+    <div class="row">
+      <div class="row-label"><span class="name">Насколько это важно для меня</span><span class="val val-imp" id="vi${i}">5</span></div>
+      <input type="range" class="imp" min="0" max="10" value="5" aria-label="${s[0]} — важность"
+             oninput="document.getElementById('vi${i}').textContent=this.value">
+    </div>
+    <div class="row">
+      <div class="row-label"><span class="name">Насколько я довольна этим сейчас</span><span class="val val-now" id="vn${i}">5</span></div>
+      <input type="range" class="now" min="0" max="10" value="5" aria-label="${s[0]} — сейчас"
+             oninput="document.getElementById('vn${i}').textContent=this.value">
+    </div>`;
+  root.appendChild(el);
+});
+
+const tipsDev = {
+  "Эмоциональная близость":"Пробуйте делиться не фактами дня, а чувствами — даже коротким «мне сейчас тревожно» или «мне хорошо рядом».",
+  "Телесность и близость":"Спокойно, вне самого момента близости, проговорите, какой нежности и контакта вам не хватает.",
+  "Общение и конфликты":"Обратите внимание не на то, «кто прав», а на то, как вы возвращаетесь друг к другу после ссоры.",
+  "Доверие и безопасность":"Подумайте, что подпитывает тревогу или ревность и какие договорённости вернули бы ощущение опоры.",
+  "Роли и справедливость":"Проговорите вслух, как распределены решения и быт, и где хочется большей соразмерности.",
+  "Моё пространство":"Проверьте, есть ли у вас своё время и интересы вне пары — не растворяется ли «я» в «мы».",
+  "Время вдвоём":"Запланируйте регулярное «мы»-время без быта и гаджетов — пусть небольшое, но своё.",
+  "Финансы":"Наведите ясность: общие цели, кто за что отвечает, что даёт вам ощущение предсказуемости.",
+  "Семья и границы":"Посмотрите, где границы с роднёй и детьми размыты и что хотелось бы выстроить.",
+  "Ценности и будущее":"Сверьте образы будущего: куда вы движетесь и совпадают ли долгосрочные ориентиры.",
+  "Признание и уважение":"Заметьте, в каких словах и жестах вы чувствуете, что вас ценят, — и просите об этом прямо.",
+  "Поддержка в трудном":"Обратите внимание, к кому вы идёте в тяжёлый момент и хватает ли вам опоры именно в паре."
+};
+const tipsRes = {
+  "Эмоциональная близость":"Эта близость — опора: на ней проще обсуждать и более трудные темы.",
+  "Телесность и близость":"Телесный контакт питает и остальные сферы — берегите его.",
+  "Общение и конфликты":"Умение договариваться — сильная сторона, на неё можно опираться в спорах.",
+  "Доверие и безопасность":"Чувство безопасности — фундамент; берегите то, что его поддерживает.",
+  "Роли и справедливость":"Ощущение честности в ролях снижает фоновое напряжение в паре.",
+  "Моё пространство":"Сохранённая отдельность делает пару устойчивее — это ваш ресурс.",
+  "Время вдвоём":"Совместное время — топливо отношений; продолжайте его беречь.",
+  "Финансы":"Ясность в деньгах снимает много скрытых конфликтов — хорошая опора.",
+  "Семья и границы":"Выстроенные границы с роднёй — заметный ресурс устойчивости.",
+  "Ценности и будущее":"Общий вектор будущего держит пару вместе на дистанции.",
+  "Признание и уважение":"Взаимное уважение — то, на чём держится тепло; цените это.",
+  "Поддержка в трудном":"Вы опора друг для друга в трудном — один из главных ресурсов пары."
+};
+
+function buildSummary(noScroll){
+  const data = spheres.map((s,i) => ({
+    name: s[0],
+    imp: +document.querySelectorAll('.imp')[i].value,
+    now: +document.querySelectorAll('.now')[i].value
+  }));
+
+  const priority = data
+    .filter(d => d.imp >= 6 && (d.imp - d.now) >= 3)
+    .sort((a,b) => ((b.imp-b.now)*b.imp) - ((a.imp-a.now)*a.imp));
+
+  const strengths = data
+    .filter(d => d.now >= 7)
+    .sort((a,b) => b.now - a.now);
+
+  const stRows = strengths.length ? strengths.map(d => `
+      <div class="sum-item">
+        <div class="sum-row">
+          <span class="sum-name">${d.name}</span>
+          <span class="sum-bar"><i style="width:${d.now*10}%;background:var(--green-soft)"></i></span>
+          <span class="sum-gap">${d.now}</span>
+        </div>
+        <p class="sum-tip">${tipsRes[d.name]||''}</p>
+      </div>`).join('')
+    : `<p class="empty">Пока ни одна сфера не набрала высокой удовлетворённости. Возможно, именно с этого ощущения стоит начать разговор о развитии отношений.</p>`;
+
+  const prRows = priority.length ? priority.map(d => `
+      <div class="sum-item">
+        <div class="sum-row">
+          <span class="sum-name">${d.name}</span>
+          <span class="sum-bar"><i style="width:${d.now*10}%;background:var(--powder)"></i></span>
+          <span class="sum-gap">−${d.imp-d.now}</span>
+        </div>
+        <p class="sum-tip">${tipsDev[d.name]||''}</p>
+      </div>`).join('')
+    : `<p class="empty">Сейчас нет сфер с большим разрывом между важностью и удовлетворённостью — хороший знак, и тоже о чём-то говорит.</p>`;
+
+  document.getElementById('summary').innerHTML = `
+    <div class="summary">
+      <h2>Моя карта</h2>
+      <p class="sub">Результаты не оценивают отношения в целом — они лишь показывают, что есть сейчас: ресурсы, на которые можно опереться, и зоны развития. Цифра рядом с зоной развития — это разрыв между важностью и тем, насколько вы довольны: чем он больше, тем заметнее несоответствие.</p>
+      <div class="sum-group">
+        <h3>1 · Ресурсы и опоры</h3>
+        <p class="sub" style="margin:-6px 0 14px">То, чем вы уже довольны — на это можно опираться.</p>
+        ${stRows}
+      </div>
+      <div class="sum-group">
+        <h3>2 · Зоны развития</h3>
+        <p class="sub" style="margin:-6px 0 14px">Важно для вас, но пока не хватает. Цифра — размер разрыва.</p>
+        ${prRows}
+      </div>
+      <div class="sum-cta">
+        Если вы хотите обсудить результаты — напишите мне, и я предложу дальнейшие шаги для развития отношений. Это бесплатно.
+        <br>
+        <a class="tg-btn" href="https://t.me/Anastasia_Sibgatulina" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9.78 18.65l.28-4.23 7.68-6.92c.34-.31-.07-.46-.52-.19L7.74 13.3 3.64 12c-.88-.25-.89-.86.2-1.3l15.97-6.16c.73-.33 1.43.18 1.15 1.3l-2.72 12.81c-.19.91-.74 1.13-1.5.71L12.6 16.3l-1.99 1.93c-.23.23-.42.42-.83.42z"/></svg>
+          Написать в Telegram
+        </a>
+      </div>
+      <div class="signature">
+        <div class="sig-name">С уважением, Анастасия Васильева</div>
+        <div class="sig-role">клинический психолог</div>
+        <a class="sig-tg" href="https://t.me/Anastasia_Sibgatulina" target="_blank" rel="noopener">t.me/Anastasia_Sibgatulina</a>
+      </div>
+    </div>`;
+  if(!noScroll){ document.getElementById('summary').scrollIntoView({behavior:'smooth', block:'start'}); }
+}
+
+function buildReportHTML(){
+  const data = spheres.map((s,i) => ({
+    name: s[0],
+    imp: +document.querySelectorAll('.imp')[i].value,
+    now: +document.querySelectorAll('.now')[i].value
+  }));
+  const priority = data.filter(d => d.imp >= 6 && (d.imp - d.now) >= 3)
+    .sort((a,b) => ((b.imp-b.now)*b.imp) - ((a.imp-a.now)*a.imp));
+  const strengths = data.filter(d => d.now >= 7).sort((a,b) => b.now - a.now);
+
+  const C = {ink:'#3E4A52',soft:'#5C6A72',mute:'#8C8273',blue:'#41525C',blueAcc:'#4F6E7D',
+             terra:'#9F6C52',line:'#E1D7C8',panel:'#FBF8F2',sand:'#F1E7D6'};
+  const today = new Date().toLocaleDateString('ru-RU',{day:'numeric',month:'long',year:'numeric'});
+
+  const scoreRows = data.map(d => `
+    <tr>
+      <td style="padding:6px 0;border-bottom:1px solid ${C.line};font-size:13px;color:${C.ink};">${d.name}</td>
+      <td style="padding:6px 0;border-bottom:1px solid ${C.line};font-size:13px;color:${C.blueAcc};text-align:right;width:70px;">важн. ${d.imp}</td>
+      <td style="padding:6px 0;border-bottom:1px solid ${C.line};font-size:13px;color:${C.terra};text-align:right;width:90px;">сейчас ${d.now}</td>
+    </tr>`).join('');
+
+  const devBlock = priority.length ? priority.map(d => `
+    <div style="padding:11px 0;border-bottom:1px solid ${C.line};">
+      <div style="font-size:14px;font-weight:600;color:${C.blue};">${d.name}
+        <span style="color:${C.terra};font-weight:600;">&nbsp;— разрыв ${d.imp-d.now}</span></div>
+      <div style="font-size:12.5px;color:${C.soft};line-height:1.5;margin-top:3px;">${tipsDev[d.name]||''}</div>
+    </div>`).join('')
+    : `<div style="font-size:13px;color:${C.mute};font-style:italic;">Сейчас нет сфер с большим разрывом — хороший знак.</div>`;
+
+  const resBlock = strengths.length ? strengths.map(d => `
+    <div style="padding:11px 0;border-bottom:1px solid ${C.line};">
+      <div style="font-size:14px;font-weight:600;color:${C.blue};">${d.name}
+        <span style="color:${C.blueAcc};font-weight:600;">&nbsp;— ${d.now}/10</span></div>
+      <div style="font-size:12.5px;color:${C.soft};line-height:1.5;margin-top:3px;">${tipsRes[d.name]||''}</div>
+    </div>`).join('')
+    : `<div style="font-size:13px;color:${C.mute};font-style:italic;">Пока ни одна сфера не набрала высокой удовлетворённости.</div>`;
+
+  return `
+  <div style="width:720px;padding:36px 40px;background:${C.panel};font-family:'Manrope',sans-serif;color:${C.ink};box-sizing:border-box;">
+    <div style="font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:${C.blueAcc};font-weight:600;">Бланк для самонаблюдения</div>
+    <div style="font-family:'Lora',serif;font-size:32px;font-weight:600;color:${C.blue};margin:8px 0 4px;">Карта моих отношений</div>
+    <div style="font-size:12.5px;color:${C.mute};margin-bottom:22px;">${today}</div>
+
+    <div style="font-family:'Lora',serif;font-size:18px;color:${C.blue};margin:0 0 6px;">Зоны развития</div>
+    <div style="font-size:12px;color:${C.mute};margin-bottom:8px;">Важно, но пока не хватает — с этого стоит начать.</div>
+    ${devBlock}
+
+    <div style="font-family:'Lora',serif;font-size:18px;color:${C.blue};margin:26px 0 6px;">Ресурсы и опоры</div>
+    <div style="font-size:12px;color:${C.mute};margin-bottom:8px;">То, чем вы уже довольны — на это можно опираться.</div>
+    ${resBlock}
+
+    <div style="font-family:'Lora',serif;font-size:18px;color:${C.blue};margin:26px 0 6px;">Все сферы — мои оценки</div>
+    <table style="width:100%;border-collapse:collapse;">${scoreRows}</table>
+
+    <div style="margin-top:24px;padding:16px 18px;background:${C.sand};border-radius:8px;font-size:13.5px;color:${C.ink};line-height:1.55;">
+      Если вы хотите обсудить результаты — напишите мне, и я предложу дальнейшие шаги для развития отношений. Это бесплатно.<br>
+      <span style="color:${C.blue};font-weight:600;">t.me/Anastasia_Sibgatulina</span>
+    </div>
+
+    <div style="margin-top:22px;text-align:right;">
+      <div style="font-family:'Lora',serif;font-size:18px;font-weight:600;color:${C.blue};">С уважением, Анастасия Васильева</div>
+      <div style="font-size:12.5px;color:${C.mute};">клинический психолог</div>
+    </div>
+
+    <div style="margin-top:20px;padding-top:14px;border-top:1px solid ${C.line};font-size:10px;color:${C.mute};line-height:1.5;">
+      Бланк составлен на основе концепций семейной и парной терапии: теории привязанности (Дж. Боулби; С. Джонсон, ЭФТ), исследований пар Дж. Готтмана, имаго-подхода (Х. Хендрикс), модели межличностных потребностей В. Шутца (FIRO) и системного подхода. Предназначен для самонаблюдения; не является стандартизированной психодиагностической методикой.
+    </div>
+  </div>`;
+}
+
+function downloadPDF(){
+  if(typeof html2pdf === 'undefined'){ window.print(); return; }
+  const holder = document.createElement('div');
+  holder.style.position = 'fixed';
+  holder.style.left = '-10000px';
+  holder.style.top = '0';
+  holder.innerHTML = buildReportHTML();
+  document.body.appendChild(holder);
+  const report = holder.firstElementChild;
+  const opt = {
+    margin:[10,0,12,0],
+    filename:'Карта-отношений.pdf',
+    image:{type:'jpeg',quality:0.96},
+    html2canvas:{scale:2,useCORS:true,backgroundColor:'#FBF8F2'},
+    jsPDF:{unit:'mm',format:'a4',orientation:'portrait'},
+    pagebreak:{mode:['css','legacy']}
+  };
+  html2pdf().set(opt).from(report).save().then(function(){
+    document.body.removeChild(holder);
+  }).catch(function(){
+    if(holder.parentNode){ document.body.removeChild(holder); }
+    window.print();
+  });
+}
+
+function resetAll(){
+  document.querySelectorAll('input[type=range]').forEach((r)=>{ r.value=5; });
+  spheres.forEach((s,i)=>{
+    document.getElementById('vi'+i).textContent='5';
+    document.getElementById('vn'+i).textContent='5';
+  });
+  document.querySelectorAll('textarea').forEach(t=>t.value='');
+  document.getElementById('summary').innerHTML='';
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+</script>
+</body>
+</html>
